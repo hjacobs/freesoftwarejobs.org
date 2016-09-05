@@ -1,0 +1,136 @@
+swagger: '2.0'
+info:
+  title: Free Software Jobs API
+  version: "0.1"
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /jobs:
+    get:
+      tags: [Jobs]
+      operationId: app.get_jobs
+      summary: Get all jobs
+      parameters:
+        - name: location
+          in: query
+          type: string
+        - name: limit
+          in: query
+          type: integer
+          minimum: 0
+          default: 100
+      responses:
+        200:
+          description: Return jobs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Job'
+    post:
+      tags: [Jobs]
+      operationId: app.post_job
+      summary: Post a new job offer
+      parameters:
+        - name: job
+          in: body
+          schema:
+            $ref: '#/definitions/Job'
+      responses:
+        201:
+          description: New job offer created
+  /jobs/{job_id}:
+    get:
+      tags: [Jobs]
+      operationId: app.get_job
+      summary: Get a single job
+      parameters:
+        - $ref: '#/parameters/job_id'
+      responses:
+        200:
+          description: Return job
+          schema:
+            $ref: '#/definitions/Job'
+        404:
+          description: Job does not exist
+    put:
+      tags: [Jobs]
+      operationId: app.put_job
+      summary: Create or update a job
+      parameters:
+        - $ref: '#/parameters/job_id'
+        - name: job
+          in: body
+          schema:
+            $ref: '#/definitions/Job'
+      responses:
+        200:
+          description: Job updated
+        201:
+          description: New job created
+    delete:
+      tags: [Jobs]
+      operationId: app.delete_job
+      summary: Remove a job
+      parameters:
+        - $ref: '#/parameters/job_id'
+      responses:
+        204:
+          description: Job was deleted
+        404:
+          description: Job does not exist
+
+
+parameters:
+  job_id:
+    name: job_id
+    description: Job's Unique identifier
+    in: path
+    type: string
+    required: true
+    pattern: "^[a-zA-Z0-9-]+$"
+
+definitions:
+  Job:
+    type: object
+    required:
+      - title
+      - employer
+      - location
+    properties:
+      id:
+        type: string
+        description: Unique identifier
+        example: "123"
+        readOnly: true
+      title:
+        type: string
+        description: Job's name
+        example: "Web Developer for project Foobar"
+        minLength: 1
+        maxLength: 100
+      employer:
+        type: string
+        description: Employer
+        example: "Foobar Inc"
+        minLength: 1
+      location:
+        type: string
+        description: Location
+        example: "Berlin, Germany"
+        minLength: 1
+      description:
+        type: string
+        description: Job description
+        example: "Foobar Inc is hiring an experienced web developer in Berlin."
+        minLength: 1
+      tags:
+        type: object
+        description: Custom tags
+      created:
+        type: string
+        format: date-time
+        description: Creation time
+        example: "2015-07-07T15:49:51.230+02:00"
+        readOnly: true
