@@ -80,6 +80,23 @@ paths:
           description: Job was deleted
         404:
           description: Job does not exist
+  /jobs/{job_id}/confirm:
+    post:
+      tags: [Jobs]
+      operationId: app.confirm_job
+      summary: Activate job offer
+      parameters:
+        - $ref: '#/parameters/job_id'
+        - name: token
+          in: body
+          schema:
+            type: string
+            pattern: "^[a-zA-Z0-9]{20}$"
+      responses:
+        200:
+          description: Job was confirmed
+        404:
+          description: Job does not exist
 
 
 parameters:
@@ -89,7 +106,7 @@ parameters:
     in: path
     type: string
     required: true
-    pattern: "^[a-zA-Z0-9-]+$"
+    pattern: "^job-[a-zA-Z0-9-]{16}$"
 
 definitions:
   Job:
@@ -108,29 +125,44 @@ definitions:
         type: string
         description: Job's name
         example: "Web Developer for project Foobar"
-        minLength: 1
-        maxLength: 100
+        minLength: 4
+        maxLength: 200
       employer:
         type: string
         description: Employer
         example: "Foobar Inc"
         minLength: 1
+        maxLength: 200
       location:
         type: string
         description: Location
         example: "Berlin, Germany"
         minLength: 1
+        maxLength: 200
       description:
         type: string
         description: Job description
         example: "Foobar Inc is hiring an experienced web developer in Berlin."
         minLength: 1
+        maxLength: 4000
+      url:
+        type: string
+        format: url
+        description: URL of job offer
+        minLength: 4
+        maxLength: 200
       tags:
-        type: object
+        type: array
         description: Custom tags
+        items:
+          type: string
       created:
         type: string
         format: date-time
         description: Creation time
         example: "2015-07-07T15:49:51.230+02:00"
         readOnly: true
+      created_by:
+        type: string
+        description: Email of creator
+        example: "mail@example.org"

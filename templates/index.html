@@ -66,8 +66,15 @@ i.e. a Linux administration job in an otherwise proprietary environment does not
 
         <p>No. I believe there should be no barriers for posting Free Software Jobs. The FSF charges a fee and I suppose that's one reason their page lists only very few jobs.</p>
 
-        <h3>Links</h3>
-        <a href="https://fsfe.org/">Free Software Foundation Europe (FSFE)</a>
+        <h3>Example Job Offers</h3>
+
+        <p>(curated list, no guarantees for correctness)</p>
+
+        {% for job in jobs.values()|sort(attribute='created', reverse=True) %}
+            <h4><a href="jobs/{{job.slug|e}}.html">{{ job.title|e }}</a></h4>
+            <p>{{ job.employer|e }} <span>{{ job.location|e }}</span></p>
+            <p>{% for tag in job.tags %} {{ tag|e }} {% endfor %}</p>
+        {% endfor %}
 	</div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
