@@ -28,8 +28,10 @@ for entry in os.listdir(jobs_path):
 
 loader = jinja2.FileSystemLoader('templates')
 env = jinja2.Environment(loader=loader)
-template = env.get_template('index.html')
-template.stream(jobs=jobs).dump('output/index.html')
+for tpl in os.listdir('templates'):
+    if tpl.endswith('.html') and tpl != 'job.html':
+        template = env.get_template(tpl)
+        template.stream(jobs=jobs).dump('output/' + tpl)
 
 for job in jobs.values():
     template = env.get_template('job.html')
